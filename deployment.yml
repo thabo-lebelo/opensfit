@@ -1,0 +1,63 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: "2021-07-20T05:26:39Z"
+  generation: 68
+  labels:
+    app: cpic-navigation-app
+    io.kompose.service: cpic-navigation-app
+  name: cpic-navigation-app
+  namespace: eeanalytics-prod
+spec:
+  replicas: 1
+  selector:
+    app: cpic-navigation-app
+    io.kompose.service: cpic-navigation-app
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: cpic-navigation-app
+        io.kompose.service: cpic-navigation-app
+    spec:
+      containers:
+      - image: docker-registry.default.svc:5000/eeanalytics-prod/cpic-navigation
+        imagePullPolicy: Always
+        name: cpic-navigation-app
+        resources:
+          limits:
+            cpu: 40m
+            memory: 100Mi
+          requests:
+            cpu: 10m
+            memory: 25Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - cpic-navigation-app
+      from:
+        kind: ImageStreamTag
+        name: cpic-navigation:latest
+        namespace: eeanalytics-prod
+    type: ImageChange
+status: {}
