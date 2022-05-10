@@ -1,0 +1,12 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: cpic-navigation
+  namespace: eeanalytics-prod
+spec:
+  host: cpic-navigation-eeanalytics-prod.cnap-00-mp-prod.bmwgroup.net
+  port:
+    targetPort: angular
+  to:
+    kind: Service
+    name: cpic-navigation-service
